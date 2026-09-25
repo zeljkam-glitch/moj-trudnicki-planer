@@ -1,0 +1,60 @@
+import { bagCatalog, preparationCatalog } from "./catalog";
+import type { PlannerState } from "./types";
+
+export const initialState: PlannerState = {
+  settings: { name: "Ivana", dueDate: "2027-01-12", hospital: "", hospitalAddress: "", hospitalPhone: "", supportPhone: "", firstPregnancy: true, trackExpenses: true, plannerMode: "essential", onboardingComplete: false },
+  preparations: preparationCatalog,
+  bagItems: bagCatalog,
+  expenses: [
+    { id: "e1", name: "Krevetić", category: "Namještaj i tekstil", planned: 260, paid: 229, isGift: false },
+    { id: "e2", name: "Madrac", category: "Namještaj i tekstil", planned: 110, paid: 95, isGift: false },
+    { id: "e3", name: "Trudničke tajice", category: "Odjeća i obuća", planned: 50, paid: 42, isGift: false },
+  ],
+  birthPlan: {
+    fullName: "", supportPerson: "", hospital: "", allergies: "", therapy: "", fears: "",
+    atmosphere: ["Prigušeno svjetlo"], positions: "Želim se slobodno kretati i mijenjati položaje ako je moguće.",
+    induction: "Razgovarati prije odluke", epidural: "Želim razgovarati o tome", episiotomy: "Samo ako je medicinski potrebno",
+    cesarean: "Molim objasniti svaki korak ako bude potrebno.", skinToSkin: true, breastfeeding: true,
+    cord: "Kasnije rezanje, ako je moguće", roomingIn: "Da, ako je moguće", photos: "Pratnja može fotografirati prve trenutke.",
+    babyExamWithMother: true, notes: "",
+  },
+  adminTasks: [
+    { id: "a0", name: "Rodiljni dopust i naknada", description: "Zahtjev roditelja koji koristi dopust, putem e-Građana ili HZZO-a.", deadline: "Provjeri prije početka dopusta", completed: false },
+    { id: "a1", name: "Prijava djeteta", description: "Rodni list, domovnica i potvrda imena.", deadline: "U roku 30 dana", completed: false },
+    { id: "a2", name: "Prijava prebivališta", description: "Putem e-Građana ili u policijskoj postaji.", deadline: "U roku 30 dana", completed: false },
+    { id: "a3", name: "Prijava na HZZO", description: "Prijava djeteta u obvezno zdravstveno osiguranje.", deadline: "U roku 30 dana", completed: false },
+    { id: "a4", name: "Porezna olakšica", description: "Dodavanje djeteta na poreznu karticu roditelja.", deadline: "Do kraja mjeseca", completed: false },
+    { id: "a5", name: "Jednokratna naknada HZZO-a", description: "Zahtjev za državnu novčanu potporu za novorođeno dijete.", deadline: "U roku 6 mjeseci", completed: false },
+    { id: "a6", name: "Jednokratna gradska naknada", description: "Provjeri uvjete i iznos u svom gradu ili općini.", deadline: "Najčešće u roku 6 mjeseci", completed: false },
+    { id: "a7", name: "APN prijava", description: "Ako imate subvencionirani kredit, pošalji rodni list i traženi obrazac.", deadline: "U roku 60 dana", completed: false },
+    { id: "a8", name: "Prijava u župu", description: "Ako planirate krštenje, javi se župi prema prebivalištu.", deadline: "Nekoliko tjedana prije krštenja", completed: false },
+    { id: "a9", name: "Osobna iskaznica ili putovnica", description: "Dokument za bebu ako planirate putovanje.", deadline: "Prema potrebi", completed: false },
+  ],
+  story: {
+    partnerName: "", babyName: "", lastPeriod: "", pregnancyFound: "", firstUltrasound: "", firstHeartbeat: "",
+    firstMovement: "", firstBabyPurchase: "", nurseryReady: "", lastUltrasound: "", birthDate: "",
+    healthGoals: "", birthGoals: "", wellbeingGoals: "", practicalGoals: "", homeGoals: "", postpartumGoals: "",
+    advice: Array(10).fill(""), compliments: Array(10).fill(""), mantra: "",
+  },
+  readingList: [
+    { id: "r1", title: "Što očekivati u trudnoći", author: "Heidi Murkoff", topics: "Trudnoća i priprema", read: false, isbn: "9789531325592", url: "https://search.worldcat.org/search?q=bn%3A9789531325592", source: "WorldCat" },
+    { id: "r2", title: "Što očekivati prve godine", author: "Heidi Murkoff", topics: "Prva godina", read: false, isbn: "9789531326339", url: "https://search.worldcat.org/search?q=bn%3A9789531326339", source: "WorldCat" },
+    { id: "r3", title: "Unutarnji svijet roditeljstva", author: "Daniel J. Siegel i Mary Hartzell", topics: "Svjesno roditeljstvo", read: false, isbn: "9789537351694", url: "https://search.worldcat.org/search?q=bn%3A9789537351694", source: "WorldCat" },
+    { id: "r4", title: "Smiren roditelj, sretna djeca", author: "dr. Laura Markham", topics: "Emocije i odnos", read: false, isbn: "9789537351960", url: "https://search.worldcat.org/search?q=bn%3A9789537351960", source: "WorldCat" },
+    { id: "r5", title: "Knjiga o dojenju", author: "Hannah Lothrop", topics: "Dojenje", read: false, isbn: "9789537351113", url: "https://search.worldcat.org/search?q=bn%3A9789537351113", source: "WorldCat" },
+    { id: "r6", title: "Čudesni tjedni", author: "Hetty van de Rijt i Frans Plooij", topics: "Razvoj bebe", read: false, isbn: "9789531318327", url: "https://search.worldcat.org/search?q=bn%3A9789531318327", source: "WorldCat" },
+    { id: "r7", title: "The Fourth Trimester", author: "Kimberly Ann Johnson", topics: "Nakon poroda", read: false, isbn: "9781611804003", url: "https://search.worldcat.org/search?q=bn%3A9781611804003", source: "WorldCat" },
+    { id: "r8", title: "Kako preživjeti prvu godinu majčinstva", author: "Allison Auth", topics: "Nakon poroda i prva godina", read: false, isbn: "9789532052312", url: "https://search.worldcat.org/search?q=bn%3A9789532052312", source: "WorldCat" },
+  ],
+  courses: [
+    { id: "c1", name: "Tečaj za trudnice u domu zdravlja", location: "Provjeri lokalni dom zdravlja", duration: "Prema programu", applyBy: "U trudnoći", registered: false },
+    { id: "c2", name: "Dojenje", location: "Dom zdravlja / online", duration: "Prema programu", applyBy: "Prije ili nakon poroda", registered: false },
+    { id: "c3", name: "Baby handling", location: "Dom zdravlja / privatna radionica", duration: "Prema programu", applyBy: "Prije poroda", registered: false },
+    { id: "c4", name: "Babywearing", location: "Radionica / online", duration: "Prema programu", applyBy: "Prije ili nakon poroda", registered: false },
+    { id: "c5", name: "RODA online edukacije", location: "Online", duration: "Prema programu", applyBy: "Provjeri termine", registered: false },
+    { id: "c6", name: "Radionica doule", location: "Uživo / online", duration: "Prema programu", applyBy: "Provjeri termine", registered: false },
+  ],
+  notes: [{ id: "n1", title: "Moje misli", body: "", updatedAt: new Date(0).toISOString() }],
+  appointments: [],
+  moodEntries: [],
+};
