@@ -8,7 +8,7 @@ import { Icon } from "../icons";
 import { ProgressRing } from "../progress-ring";
 
 const atmosphereOptions = ["Prigušeno svjetlo", "Glazba", "Tišina", "Što manje ljudi"];
-const decisionOptions = ["Da", "Ne", "Želim razgovarati o tome", "Razgovarati prije odluke", "Samo ako je medicinski potrebno"];
+const decisionOptions = ["", "Da", "Ne", "Želim razgovarati o tome", "Razgovarati prije odluke", "Samo ako je medicinski potrebno"];
 
 export function BirthPlanView() {
   const { state, update } = usePlanner();
@@ -61,9 +61,22 @@ export function BirthPlanView() {
 }
 
 function PlanSection({ id, number, title, description, children }: { id: string; number: string; title: string; description: string; children: React.ReactNode }) { return <section className="card plan-section" id={id}><div className="plan-section-head"><span>{number}</span><div><h2>{title}</h2><p>{description}</p></div></div><div className="form-grid">{children}</div></section>; }
-function Decision({ label, value, onChange }: { label: string; value: string; onChange: (value: string) => void }) { return <Field label={label}><select value={value} onChange={(e) => onChange(e.target.value)}>{decisionOptions.map((option) => <option key={option}>{option}</option>)}</select></Field>; }
-function Toggle({ label, checked, onChange }: { label: string; checked: boolean; onChange: (value: boolean) => void }) { return <label className="toggle-row"><input type="checkbox" checked={checked} onChange={(e) => onChange(e.target.checked)}/><span/><strong>{label}</strong></label>; }
-function PrintablePlan({ plan, dueDate, fallbackName }: { plan: BirthPlan; dueDate: string; fallbackName: string }) { const empty = "Nije uneseno"; return <article className="print-plan"><header><p>MOJ TRUDNIČKI PLANER</p><h1>Moj plan poroda</h1><span>Ovaj dokument sažima moje želje i služi kao podrška razgovoru s medicinskim timom.</span></header><div className="print-meta"><p><small>Ime i prezime</small>{plan.fullName || fallbackName || empty}</p><p><small>Termin</small>{dueDate ? new Intl.DateTimeFormat("hr-HR").format(new Date(`${dueDate}T12:00:00`)) : empty}</p><p><small>Rodilište</small>{plan.hospital || empty}</p><p><small>Pratnja</small>{plan.supportPerson || empty}</p></div><PrintSection title="Tijekom poroda"><p><b>Atmosfera:</b> {plan.atmosphere.join(", ") || empty}</p><p><b>Kretanje i položaji:</b> {plan.positions || empty}</p></PrintSection><PrintSection title="Intervencije"><p>Indukcija: {plan.induction}</p><p>Epiduralna: {plan.epidural}</p><p>Epiziotomija: {plan.episiotomy}</p><p><b>Carski rez:</b> {plan.cesarean || empty}</p></PrintSection><PrintSection title="Nakon poroda"><p>Kontakt koža na kožu: {plan.skinToSkin ? "Da, ako je moguće" : "Ne"}</p><p>Dojenje odmah: {plan.breastfeeding ? "Da, ako je moguće" : "Ne"}</p><p>Prvi pregled bebe uz mamu: {plan.babyExamWithMother ? "Da, ako je moguće" : "Ne"}</p><p><b>Pupkovina:</b> {plan.cord}</p><p><b>Smještaj bebe:</b> {plan.roomingIn}</p></PrintSection>{plan.notes && <PrintSection title="Dodatne napomene"><p>{plan.notes}</p></PrintSection>}<footer>Hvala što ste odvojili vrijeme za razgovor o mojim željama.</footer></article>; }
+function Decision({ label, value, onChange }: { label: string; value: string; onChange: (value: string) => void }) { return <Field label={label}><select value={value} onChange={(e) => onChange(e.target.value)}>{decisionOptions.map((option) => <option key={option} value={option}>{option || "Još nisam odlučila"}</option>)}</select></Field>; }
+function Toggle({ label, checked, onChange }: { label: string; checked: boolean | null; onChange: (value: boolean | null) => void }) { return <Field label={label}><select value={checked === null ? "" : String(checked)} onChange={(e) => onChange(e.target.value === "" ? null : e.target.value === "true")}><option value="">Još nisam odlučila</option><option value="true">Da, ako je moguće</option><option value="false">Ne</option></select></Field>; }
+function PrintablePlan({ plan, dueDate, fallbackName }: { plan: BirthPlan; dueDate: string; fallbackName: string }) {
+  const empty = "Nije uneseno";
+  const answer = (value: boolean | null) => value === null ? "Nije odlučeno" : value ? "Da, ako je moguće" : "Ne";
+  return <article className="print-plan">
+    <header><p>MOJ TRUDNIČKI PLANER</p><h1>Moj plan poroda</h1><span>Ovaj dokument sažima moje želje i služi kao podrška razgovoru s medicinskim timom.</span></header>
+    <div className="print-meta"><p><small>Ime i prezime</small>{plan.fullName || fallbackName || empty}</p><p><small>Termin</small>{dueDate ? new Intl.DateTimeFormat("hr-HR").format(new Date(`${dueDate}T12:00:00`)) : empty}</p><p><small>Rodilište</small>{plan.hospital || empty}</p><p><small>Pratnja</small>{plan.supportPerson || empty}</p></div>
+    <PrintSection title="Zdravstvene informacije"><p><b>Alergije:</b> {plan.allergies || empty}</p><p><b>Terapije ili lijekovi:</b> {plan.therapy || empty}</p><p><b>Posebni zahtjevi ili strahovi:</b> {plan.fears || empty}</p></PrintSection>
+    <PrintSection title="Tijekom poroda"><p><b>Atmosfera:</b> {plan.atmosphere.join(", ") || empty}</p><p><b>Kretanje i položaji:</b> {plan.positions || empty}</p></PrintSection>
+    <PrintSection title="Intervencije"><p>Indukcija: {plan.induction || empty}</p><p>Epiduralna: {plan.epidural || empty}</p><p>Epiziotomija: {plan.episiotomy || empty}</p><p><b>Carski rez:</b> {plan.cesarean || empty}</p></PrintSection>
+    <PrintSection title="Nakon poroda"><p>Kontakt koža na kožu: {answer(plan.skinToSkin)}</p><p>Dojenje odmah: {answer(plan.breastfeeding)}</p><p>Prvi pregled bebe uz mamu: {answer(plan.babyExamWithMother)}</p><p><b>Pupkovina:</b> {plan.cord || empty}</p><p><b>Smještaj bebe:</b> {plan.roomingIn || empty}</p><p><b>Fotografiranje i prvi trenuci:</b> {plan.photos || empty}</p></PrintSection>
+    {plan.notes && <PrintSection title="Dodatne napomene"><p>{plan.notes}</p></PrintSection>}
+    <footer>Hvala što ste odvojili vrijeme za razgovor o mojim željama.</footer>
+  </article>;
+}
 function PrintSection({ title, children }: { title: string; children: React.ReactNode }) { return <section><h2>{title}</h2>{children}</section>; }
 
 function birthPlanSections(plan: BirthPlan) {

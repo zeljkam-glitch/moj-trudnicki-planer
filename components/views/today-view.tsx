@@ -50,7 +50,7 @@ export function TodayView({ onNavigate }: { onNavigate: (section: AppSection) =>
   return <div className="page today-page">
     <header className="today-heading"><div><p className="eyebrow">{todayLabel}</p><h1>Bok, {firstName}.</h1><p>Odaberi što želiš riješiti danas.</p></div><span className="sun-shape" aria-hidden="true" /></header>
 
-    <section className="pregnancy-hero">
+    {!state.settings.dueDate ? <section className="card due-date-prompt"><h2>Postavi termin poroda</h2><p>Termin služi za prikaz tjedna trudnoće i vremenskog plana. Možeš ga promijeniti kasnije.</p><Button onClick={() => onNavigate("more")}>Otvori postavke</Button></section> : <section className="pregnancy-hero">
       <div className="hero-copy">
         <span className="hero-kicker"><Icon name="calendar" size={16} /> {trimester}. tromjesečje</span>
         <p className="week-number"><strong>{week}.</strong> tjedan</p>
@@ -62,11 +62,11 @@ export function TodayView({ onNavigate }: { onNavigate: (section: AppSection) =>
         <div className="stage-orbit"><span className="orbit-dot one"/><span className="orbit-dot two"/><div><small>Tjedan</small><strong>{week}</strong><span>od 40</span></div></div>
         <div className="stage-metrics"><span><small>Preostalo</small><strong>{Math.max(0, 40 - week)} tj.</strong></span><span><small>Do termina</small><strong>{daysToGo} dana</strong></span></div>
       </div>
-    </section>
+    </section>}
 
     <button className="hospital-quick-card" onClick={() => onNavigate("hospital")}><span className="hospital-quick-icon"><Icon name="bag" size={22}/></span><span><small>{week >= 34 ? "Brza provjera za polazak" : "Pripremi unaprijed"}</small><strong>Režim za rodilište</strong><em>Dokumenti, kontakti, torba i Plan poroda</em></span><span>Otvori <Icon name="arrow" size={15}/></span></button>
 
-    <section className="card pregnancy-timeline">
+    {state.settings.dueDate && <section className="card pregnancy-timeline">
       <div className="section-head"><div><p className="eyebrow">Tvoj ritam</p><h2>Plan trudnoće po razdobljima</h2></div><span>{week}. tjedan</span></div>
       <p className="timeline-intro">Ovo je organizacijski okvir, ne medicinski raspored. Prilagodi ga sebi i uputama svog liječnika.</p>
       <div className="timeline-track">{timelineMilestones.map((milestone) => {
@@ -76,7 +76,7 @@ export function TodayView({ onNavigate }: { onNavigate: (section: AppSection) =>
           <strong>{milestone.label}</strong><em>{milestone.text}</em>
         </button>;
       })}</div>
-    </section>
+    </section>}
 
     <section className="card mood-card">
       <div className="mood-copy"><p className="eyebrow">Kratka provjera</p><h2>Kako si danas?</h2><p>Odaberi kako se osjećaš. Nema bodovanja ni procjene zdravlja.</p></div>
@@ -154,6 +154,7 @@ function formatAppointment(date: string, time: string) {
 }
 
 function pregnancyProgress(dueDate: string) {
+  if (!dueDate || !Number.isFinite(new Date(`${dueDate}T12:00:00`).getTime())) return { week: 0, daysToGo: 0 };
   const due = new Date(`${dueDate}T12:00:00`);
   const today = new Date();
   const daysToGo = Math.max(0, Math.ceil((due.getTime() - today.getTime()) / 86400000));

@@ -24,7 +24,7 @@ export function PlannerApp() {
 
 function PlannerContent() {
   const [section, setSection] = useState<AppSection>("today");
-  const { state, hydrated } = usePlanner();
+  const { state, hydrated, storageError, startPersonal } = usePlanner();
   const navigate = useCallback((nextSection: AppSection) => {
     window.scrollTo({ top: 0, left: 0, behavior: "auto" });
     setSection(nextSection);
@@ -33,6 +33,8 @@ function PlannerContent() {
   if (!hydrated) return <div className="loading-screen"><span className="brand-mark large"><span /></span><p>Otvaram tvoj planer…</p></div>;
 
   return <>
+    {state.settings.demoMode && <div className="planner-notice demo-notice" role="status">Pregled primjera: promjene se ne spremaju. <button onClick={startPersonal}>Započni svoj planer</button></div>}
+    {storageError && !state.settings.demoMode && <div className="planner-notice storage-notice" role="alert">Podaci se ne mogu spremiti u ovom pregledniku. Provjeri postavke pohrane i preuzmi sigurnosnu kopiju.</div>}
     <AppShell section={section} onNavigate={navigate}>
       {section === "today" && <TodayView onNavigate={navigate} />}
       {section === "appointments" && <AppointmentsView />}

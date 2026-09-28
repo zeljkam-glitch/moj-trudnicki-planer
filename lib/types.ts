@@ -17,6 +17,7 @@ export interface Settings {
   trackExpenses: boolean;
   plannerMode: PlannerMode;
   onboardingComplete: boolean;
+  demoMode?: boolean;
 }
 
 export interface PreparationItem {
@@ -67,12 +68,12 @@ export interface BirthPlan {
   epidural: string;
   episiotomy: string;
   cesarean: string;
-  skinToSkin: boolean;
-  breastfeeding: boolean;
+  skinToSkin: boolean | null;
+  breastfeeding: boolean | null;
   cord: string;
   roomingIn: string;
   photos: string;
-  babyExamWithMother: boolean;
+  babyExamWithMother: boolean | null;
   notes: string;
 }
 
@@ -82,6 +83,7 @@ export interface AdminTask {
   description: string;
   deadline: string;
   completed: boolean;
+  sourceUrl?: string;
 }
 
 export interface PregnancyStory {

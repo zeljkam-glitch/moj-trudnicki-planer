@@ -29,7 +29,7 @@ const catalogGroups: CatalogGroup[] = [
       ["Higijenske gaćice za inkontinenciju", "1 pakiranje"], ["Jednokratne nepropusne podloge", "5–10 kom"],
       ["Sprej ili gel za intimnu njegu", "1 kom"], ["Pjena za perineum", "1 kom"], ["Hamamelis oblozi", "1 pakiranje"],
       ["Peribottle", "1 kom"], ["Mast ili krema za hemoroide", "1 kom", "Prije uporabe provjeri s liječnikom."],
-      ["Mast za bradavice", "1 tubica"], ["Silikonske zaštite za bradavice", "1 pakiranje"], ["Termalna voda u spreju", "1 sprej"],
+      ["Termalna voda u spreju", "1 sprej"],
       ["Vlažne maramice", "1 pakiranje"], ["Vlažni toaletni papir", "1 pakiranje"], ["Dezinfekcijske maramice", "1 pakiranje"],
       ["Pasta i četkica za zube", "1 set"], ["Šampon i gel za tuširanje", "1 putni set"], ["Češalj ili četka", "1 kom"],
       ["Gumice, špangice ili traka za kosu", "2–3 kom"], ["Balzam za usne", "1 kom"], ["Krema ili mlijeko za tijelo", "1 kom"],

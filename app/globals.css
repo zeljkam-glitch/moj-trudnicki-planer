@@ -512,3 +512,9 @@ button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-
 @media print {
   body { background: white; }.sidebar, .bottom-nav, .birth-plan-page > :not(.print-plan) { display: none !important; }.main-content { margin: 0; }.birth-plan-page { padding: 0; max-width: none; }.print-plan { display: block; color: #243129; font-family: Arial, sans-serif; padding: 12mm 14mm; font-size: 10pt; }.print-plan header { border-bottom: 2px solid #526d5e; padding-bottom: 6mm; margin-bottom: 6mm; }.print-plan header p { color: #c4775d; font-size: 8pt; letter-spacing: .15em; }.print-plan header h1 { font-family: Georgia,serif; font-size: 28pt; margin: 0 0 3mm; }.print-plan header span { color: #657069; }.print-meta { display: grid; grid-template-columns: 1fr 1fr; gap: 3mm 8mm; background: #f4f1eb; padding: 5mm; margin-bottom: 6mm; }.print-meta p { margin: 0; }.print-meta small { display: block; text-transform: uppercase; font-size: 7pt; color: #758078; margin-bottom: 1mm; }.print-plan section { break-inside: avoid; border-bottom: 1px solid #ded9d1; padding: 0 0 4mm; margin-bottom: 4mm; }.print-plan section h2 { font-family: Georgia,serif; color: #526d5e; font-size: 15pt; }.print-plan section p { margin: 2mm 0; line-height: 1.45; }.print-plan footer { color: #758078; font-style: italic; text-align: center; padding-top: 5mm; }
 }
+/* Persistent feedback for demo and local storage state. */
+.planner-notice { position: relative; z-index: 100; padding: 10px 20px; text-align: center; font-size: 14px; font-weight: 600; }
+.demo-notice { background: #f4e9d8; color: #4c3528; }
+.storage-notice { background: #ffe1d9; color: #732819; }
+.planner-notice button { margin-left: 12px; border: 0; border-bottom: 1px solid currentColor; background: transparent; color: inherit; font: inherit; cursor: pointer; }
+@media (max-width: 600px) { .planner-notice { padding: 10px 14px; } .planner-notice button { display: block; margin: 4px auto 0; } }
