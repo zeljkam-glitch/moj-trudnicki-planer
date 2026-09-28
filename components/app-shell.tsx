@@ -36,7 +36,7 @@ export function AppShell({ section, onNavigate, children }: { section: AppSectio
         <p className="nav-label">Planiranje</p>
         {extraNav.map((item) => <NavButton key={item.id} item={{ ...item, short: item.label }} active={section === item.id} onClick={() => onNavigate(item.id)} />)}
       </nav>
-      <div className="sidebar-note"><Icon name="sparkle" size={18} /><p><strong>Sve se sprema automatski</strong><span>Podaci ostaju na ovom uređaju.</span></p></div>
+      <div className="sidebar-note"><Icon name="sparkle" size={18} /><p><strong>{state.settings.demoMode ? "Pregled primjera" : "Sve se sprema automatski"}</strong><span>{state.settings.demoMode ? "Promjene u primjeru se ne spremaju." : "Podaci ostaju na ovom uređaju."}</span></p></div>
       <button className="profile-row" onClick={() => onNavigate("more")}><span className="avatar">{firstName.charAt(0).toUpperCase()}</span><span><strong>{firstName}</strong><small>{state.settings.dueDate ? `Termin ${formatShortDate(state.settings.dueDate)}` : "Dodaj termin"}</small></span><Icon name="settings" size={17}/></button>
     </aside>
     <header className="mobile-topbar">
