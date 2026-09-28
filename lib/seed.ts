@@ -2,31 +2,27 @@ import { bagCatalog, preparationCatalog } from "./catalog";
 import type { PlannerState } from "./types";
 
 export const initialState: PlannerState = {
-  settings: { name: "Ivana", dueDate: "2027-01-12", hospital: "", hospitalAddress: "", hospitalPhone: "", supportPhone: "", firstPregnancy: true, trackExpenses: true, plannerMode: "essential", onboardingComplete: false },
+  settings: { name: "", dueDate: "", hospital: "", hospitalAddress: "", hospitalPhone: "", supportPhone: "", firstPregnancy: true, trackExpenses: true, plannerMode: "essential", onboardingComplete: false },
   preparations: preparationCatalog,
   bagItems: bagCatalog,
-  expenses: [
-    { id: "e1", name: "Krevetić", category: "Namještaj i tekstil", planned: 260, paid: 229, isGift: false },
-    { id: "e2", name: "Madrac", category: "Namještaj i tekstil", planned: 110, paid: 95, isGift: false },
-    { id: "e3", name: "Trudničke tajice", category: "Odjeća i obuća", planned: 50, paid: 42, isGift: false },
-  ],
+  expenses: [],
   birthPlan: {
     fullName: "", supportPerson: "", hospital: "", allergies: "", therapy: "", fears: "",
-    atmosphere: ["Prigušeno svjetlo"], positions: "Želim se slobodno kretati i mijenjati položaje ako je moguće.",
-    induction: "Razgovarati prije odluke", epidural: "Želim razgovarati o tome", episiotomy: "Samo ako je medicinski potrebno",
-    cesarean: "Molim objasniti svaki korak ako bude potrebno.", skinToSkin: true, breastfeeding: true,
-    cord: "Kasnije rezanje, ako je moguće", roomingIn: "Da, ako je moguće", photos: "Pratnja može fotografirati prve trenutke.",
-    babyExamWithMother: true, notes: "",
+    atmosphere: [], positions: "",
+    induction: "", epidural: "", episiotomy: "",
+    cesarean: "", skinToSkin: null, breastfeeding: null,
+    cord: "", roomingIn: "", photos: "",
+    babyExamWithMother: null, notes: "",
   },
   adminTasks: [
-    { id: "a0", name: "Rodiljni dopust i naknada", description: "Zahtjev roditelja koji koristi dopust, putem e-Građana ili HZZO-a.", deadline: "Provjeri prije početka dopusta", completed: false },
-    { id: "a1", name: "Prijava djeteta", description: "Rodni list, domovnica i potvrda imena.", deadline: "U roku 30 dana", completed: false },
-    { id: "a2", name: "Prijava prebivališta", description: "Putem e-Građana ili u policijskoj postaji.", deadline: "U roku 30 dana", completed: false },
-    { id: "a3", name: "Prijava na HZZO", description: "Prijava djeteta u obvezno zdravstveno osiguranje.", deadline: "U roku 30 dana", completed: false },
-    { id: "a4", name: "Porezna olakšica", description: "Dodavanje djeteta na poreznu karticu roditelja.", deadline: "Do kraja mjeseca", completed: false },
-    { id: "a5", name: "Jednokratna naknada HZZO-a", description: "Zahtjev za državnu novčanu potporu za novorođeno dijete.", deadline: "U roku 6 mjeseci", completed: false },
+    { id: "a0", name: "Rodiljni dopust i naknada", description: "Postupak ovisi o radnom statusu roditelja. Provjeri svoj slučaj u HZZO-u.", deadline: "Provjeri prije početka dopusta", completed: false, sourceUrl: "https://hzzo.hr/rodiljne-i-roditeljske-potpore" },
+    { id: "a1", name: "Prijava djeteta", description: "Odredi ime i prijavi dijete putem matičnog ureda ili usluge e-Novorođenče.", deadline: "Ime odredi u roku 30 dana", completed: false, sourceUrl: "https://gov.hr/hr/prijava-rodjenja-djeteta/696" },
+    { id: "a2", name: "Prijava prebivališta", description: "Prijava je dostupna u postupku prijave djeteta; provjeri potvrdu o prebivalištu.", deadline: "Provjeri odmah pri prijavi djeteta", completed: false, sourceUrl: "https://gov.hr/hr/prijava-rodjenja-djeteta/696" },
+    { id: "a3", name: "Prijava na HZZO", description: "Prijavu zdravstvenog osiguranja provjeri u postupku prijave djeteta.", deadline: "Provjeri odmah pri prijavi djeteta", completed: false, sourceUrl: "https://hzzo.hr/podnosenje-zahtjeva-putem-maticnih-ureda-za-novorodeno-dijete" },
+    { id: "a4", name: "Porezna olakšica", description: "Provjeri prijavu djeteta na poreznoj kartici roditelja koji koristi odbitak.", deadline: "Provjeri nakon prijave djeteta", completed: false, sourceUrl: "https://gov.hr/hr/prijava-rodjenja-djeteta/696" },
+    { id: "a5", name: "Jednokratna naknada HZZO-a", description: "Zahtjev za državnu novčanu potporu za novorođeno dijete.", deadline: "U roku 6 mjeseci", completed: false, sourceUrl: "https://hzzo.hr/rokovi-za-podnosenje-zahtjeva-i-ostvarivanje-prava" },
     { id: "a6", name: "Jednokratna gradska naknada", description: "Provjeri uvjete i iznos u svom gradu ili općini.", deadline: "Najčešće u roku 6 mjeseci", completed: false },
-    { id: "a7", name: "APN prijava", description: "Ako imate subvencionirani kredit, pošalji rodni list i traženi obrazac.", deadline: "U roku 60 dana", completed: false },
+    { id: "a7", name: "APN prijava", description: "Samo ako već imate subvencionirani stambeni kredit: zahtjev se predaje banci.", deadline: "U roku 60 dana ako ispunjavate uvjete", completed: false, sourceUrl: "https://apn.hr/subvencionirani-krediti/produzenje-subvencije/" },
     { id: "a8", name: "Prijava u župu", description: "Ako planirate krštenje, javi se župi prema prebivalištu.", deadline: "Nekoliko tjedana prije krštenja", completed: false },
     { id: "a9", name: "Osobna iskaznica ili putovnica", description: "Dokument za bebu ako planirate putovanje.", deadline: "Prema potrebi", completed: false },
   ],
@@ -57,4 +53,13 @@ export const initialState: PlannerState = {
   notes: [{ id: "n1", title: "Moje misli", body: "", updatedAt: new Date(0).toISOString() }],
   appointments: [],
   moodEntries: [],
+};
+
+export const demoState: PlannerState = {
+  ...initialState,
+  settings: { ...initialState.settings, name: "Ivana", dueDate: "2027-01-12", onboardingComplete: true, demoMode: true },
+  expenses: [
+    { id: "demo-e1", name: "Krevetić", category: "Namještaj i tekstil", planned: 260, paid: 229, isGift: false },
+    { id: "demo-e2", name: "Madrac", category: "Namještaj i tekstil", planned: 110, paid: 95, isGift: false },
+  ],
 };

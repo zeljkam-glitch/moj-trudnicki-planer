@@ -6,7 +6,7 @@ import { Button, Field } from "../ui";
 import { Icon } from "../icons";
 
 export function Onboarding() {
-  const { state, update } = usePlanner();
+  const { state, update, startDemo } = usePlanner();
   const [name, setName] = useState(state.settings.name);
   const [dueDate, setDueDate] = useState(state.settings.dueDate);
   const [hospital, setHospital] = useState(state.settings.hospital);
@@ -23,12 +23,12 @@ export function Onboarding() {
         <div className="privacy-note"><Icon name="heart" size={18} /><span><strong>Privatno po dizajnu</strong>Sve se sprema samo na ovom uređaju.</span></div>
       </div>
       <form className="onboarding-form" onSubmit={(event) => { event.preventDefault(); finish(); }}>
-        <div><p className="step-label">Postavljanje planera</p><h2>Za početak nam trebaju tri podatka</h2><p>Sve možeš promijeniti kasnije.</p></div>
+        <div><p className="step-label">Postavljanje planera</p><h2>Za početak odaberi termin</h2><p>Ime i rodilište možeš dodati kasnije. Primjer planera otvara se odvojeno od tvojih podataka.</p></div>
         <Field label="Kako da te zovemo?"><input value={name} onChange={(e) => setName(e.target.value)} placeholder="Tvoje ime" autoFocus /></Field>
         <Field label="Kada ti je termin?"><input type="date" value={dueDate} onChange={(e) => setDueDate(e.target.value)} required /></Field>
         <Field label="Odabrano rodilište" hint="Nije obavezno"><input value={hospital} onChange={(e) => setHospital(e.target.value)} placeholder="Još nisam odlučila" /></Field>
         <Button type="submit">Otvori moj planer <Icon name="arrow" size={18} /></Button>
-        <button type="button" className="demo-link" onClick={finish}>Samo želim razgledati demo</button>
+        <button type="button" className="demo-link" onClick={startDemo}>Samo želim razgledati demo</button>
       </form>
     </section>
   </div>;

@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
-import { initialState } from "@/lib/seed";
+import { demoState, initialState } from "@/lib/seed";
 import type { PlannerState } from "@/lib/types";
 
 const STORAGE_KEY = "moj-trudnicki-planer:v2";
@@ -10,9 +10,12 @@ const LEGACY_STORAGE_KEY = "moj-trudnicki-planer:v1";
 type PlannerContextValue = {
   state: PlannerState;
   hydrated: boolean;
+  storageError: boolean;
   update: (updater: (current: PlannerState) => PlannerState) => void;
   replace: (next: Partial<PlannerState>) => void;
   reset: () => void;
+  startDemo: () => void;
+  startPersonal: () => void;
 };
 
 const PlannerContext = createContext<PlannerContextValue | null>(null);
@@ -20,6 +23,7 @@ const PlannerContext = createContext<PlannerContextValue | null>(null);
 export function PlannerProvider({ children }: { children: React.ReactNode }) {
   const [state, setState] = useState<PlannerState>(initialState);
   const [hydrated, setHydrated] = useState(false);
+  const [storageError, setStorageError] = useState(false);
 
   useEffect(() => {
     const frame = window.requestAnimationFrame(() => {
@@ -27,7 +31,7 @@ export function PlannerProvider({ children }: { children: React.ReactNode }) {
         const saved = window.localStorage.getItem(STORAGE_KEY) ?? window.localStorage.getItem(LEGACY_STORAGE_KEY);
         if (saved) setState(mergeWithCurrentCatalog(JSON.parse(saved) as Partial<PlannerState>));
       } catch {
-        // A corrupt or blocked local store should not prevent the planner from opening.
+        setStorageError(true);
       } finally {
         setHydrated(true);
       }
@@ -36,12 +40,15 @@ export function PlannerProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   useEffect(() => {
-    if (!hydrated) return;
+    if (!hydrated || state.settings.demoMode) return;
+    let failed = false;
     try {
       window.localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     } catch {
-      // The in-memory planner remains usable when storage is blocked or full.
+      failed = true;
     }
+    const frame = window.requestAnimationFrame(() => setStorageError(failed));
+    return () => window.cancelAnimationFrame(frame);
   }, [state, hydrated]);
 
   const update = useCallback((updater: (current: PlannerState) => PlannerState) => {
@@ -56,7 +63,10 @@ export function PlannerProvider({ children }: { children: React.ReactNode }) {
     setState({ ...initialState, settings: { ...initialState.settings, onboardingComplete: true } });
   }, []);
 
-  const value = useMemo(() => ({ state, hydrated, update, replace, reset }), [state, hydrated, update, replace, reset]);
+  const startDemo = useCallback(() => setState(demoState), []);
+  const startPersonal = useCallback(() => setState(initialState), []);
+
+  const value = useMemo(() => ({ state, hydrated, storageError, update, replace, reset, startDemo, startPersonal }), [state, hydrated, storageError, update, replace, reset, startDemo, startPersonal]);
   return <PlannerContext.Provider value={value}>{children}</PlannerContext.Provider>;
 }
 
@@ -90,7 +100,7 @@ export function mergeWithCurrentCatalog(saved: Partial<PlannerState>): PlannerSt
     story: { ...initialState.story, ...saved.story },
     preparations: [...preparations, ...extraPreparations],
     bagItems: [...bagItems, ...extraBagItems],
-    adminTasks: initialState.adminTasks.map((task) => saved.adminTasks?.find((candidate) => candidate.name === task.name) ?? task),
+    adminTasks: initialState.adminTasks.map((task) => ({ ...task, completed: saved.adminTasks?.find((candidate) => candidate.id === task.id)?.completed ?? false })),
     readingList: [...readingList, ...extraReadingItems],
     courses: saved.courses ?? initialState.courses,
     notes: saved.notes ?? initialState.notes,
