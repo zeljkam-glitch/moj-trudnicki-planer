@@ -24,6 +24,10 @@ export function SettingsModal({ onClose }: { onClose: () => void }) {
   };
 
   const downloadBackup = () => {
+    if (state.settings.demoMode) {
+      setMessage("U primjeru nema osobnih podataka za sigurnosnu kopiju. Prvo započni svoj planer.");
+      return;
+    }
     const backup: BackupEnvelope = { app: "moj-trudnicki-planer", version: 2, exportedAt: new Date().toISOString(), state };
     const url = URL.createObjectURL(new Blob([JSON.stringify(backup, null, 2)], { type: "application/json" }));
     const anchor = document.createElement("a");
@@ -90,6 +94,7 @@ function readBackupState(value: unknown): Partial<PlannerState> {
   const bagsValid = Array.isArray(candidate?.bagItems) && candidate.bagItems.every((item) => isRecord(item) && typeof item.name === "string" && typeof item.bag === "string");
   const expensesValid = Array.isArray(candidate?.expenses) && candidate.expenses.every((item) => isRecord(item) && typeof item.name === "string");
   const settingsValid = isRecord(candidate?.settings) && typeof candidate.settings.name === "string" && typeof candidate.settings.dueDate === "string";
+  if (isRecord(candidate?.settings) && candidate.settings.demoMode === true) throw new Error("Kopija primjera nije osobna sigurnosna kopija.");
   const arraysValid = ["adminTasks", "readingList", "courses", "notes", "appointments", "moodEntries"].every((key) => Array.isArray(candidate?.[key]));
   if (!candidate || typeof candidate !== "object" || !settingsValid || !preparationsValid || !bagsValid || !expensesValid || !isRecord(candidate.birthPlan) || !isRecord(candidate.story) || !arraysValid) {
     throw new Error("Datoteka ne sadrži podatke planera.");
